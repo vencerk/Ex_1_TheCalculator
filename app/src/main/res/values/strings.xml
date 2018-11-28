@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">Ex_1_TheCalculator</string>
+    <string name="AngleB"><![CDATA[<-]]></string>
+    <string name="title_activity_main2">Main2Activity</string>
+</resources>
