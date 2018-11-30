@@ -18,7 +18,7 @@ public class MainActivity extends AppCompatActivity {
     Stack<Double>  Opnd = new Stack<Double>();
     Stack<Character> Optr = new Stack<Character>();
     TextView show1,show2;
-
+    String s="";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -26,17 +26,23 @@ public class MainActivity extends AppCompatActivity {
             super.onCreate(savedInstanceState);
             setContentView(R.layout.activity_main);
             //final TextView tv=(TextView) findViewById(R.id.t1);
-            show1 = (TextView) findViewById(R.id.text1);
-            show2 = (TextView) findViewById(R.id.text2);
+            show1 =  findViewById(R.id.text1);
+            show2 =  findViewById(R.id.text2);
 
 
             Button butEqual = findViewById(R.id.buttonEqual);
             butEqual.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    show1.setText(show2.getText().toString());
-
-                    show1.append("=");
+                    s=show2.getText().toString();
+                    //show1.setText(s);
+                    s+="=";
+                    show1.setText(s);
+                    double r=calculate(s);
+                    //double r=9.9;
+                    //r+=1000;
+                    String ru = "" + r ;
+                    show2.setText(ru);
                 }
             });
 
@@ -213,4 +219,123 @@ public class MainActivity extends AppCompatActivity {
 
         }
     }
+
+    public double calculate(String formula){
+        char CurrentOperator;
+        int ct=0;
+        double x = 0, y= 0 , decimal = 0, number = 0;
+        String dp ="";
+        Optr.push('#');
+        char c=formula.charAt(ct++);
+        while (c != '=') {
+            if (c != '+' && c != '-' && c != '*' && c != '/' && c != '(' && c != ')' && c != '=') {
+                while (c == '.' || (c >= '0' && c <= '9')) {
+                    dp += c;
+                    c=formula.charAt(ct++);
+                }
+                number = Double.parseDouble(dp);
+                dp="";
+                Opnd.push(number);
+            }
+
+            else {
+                switch (Judge(Optr.peek(), c)) {
+                    case -1:
+                        Optr.push(c);
+                        c = formula.charAt(ct++);
+                        break;
+                    case 0:
+                        Optr.pop();
+                        c = formula.charAt(ct++);
+                        break;
+                    case 1:
+                        CurrentOperator = Optr.pop();
+                        y = Opnd.pop();
+                        x = Opnd.pop();
+
+                        Opnd.push( Operate(x, y, CurrentOperator) );
+                        break;
+                }
+            }
+
+        }
+        CurrentOperator = Optr.pop();
+        y = Opnd.pop();
+        x = Opnd.pop();
+
+        Opnd.push( Operate(x, y, CurrentOperator) );
+        double result=Opnd.peek();
+        Opnd.clear();
+        Optr.clear();
+
+        return result;
+    }
+
+    int Judge(char a,char b){
+        int c = 0;
+        switch(a){
+            case '+':
+                if(b=='*'||b=='/'||b=='(')
+                    c=-1;
+                else
+                    c=1;
+                break;
+            case '-':
+                if(b=='*'||b=='/'||b=='(')
+                    c=-1;
+                else
+                    c=1;
+                break;
+            case '*':
+                if(b=='(')
+                    c=-1;
+                else
+                    c=1;
+                break;
+            case '/':
+                if(b=='(')
+                    c=-1;
+                else
+                    c=1;
+                break;
+            case '(':
+                if(b==')')
+                    c=0;
+                else
+                    c=-1;
+                break;
+            case ')':
+                c=1;
+                break;
+            case '#':
+                if(b=='#')
+                    c=0;
+                else
+                    c=-1;
+                break;
+        }
+        return c;
+    }
+
+    double Operate(double x,double y,char c){
+        double z = 0;
+        switch(c){
+            case '+':
+                z=x+y;
+                break;
+            case '-':
+                z=x-y;
+                break;
+            case '*':
+                z=x*y;
+                break;
+            case '/':
+                z=x/y;
+                break;
+        }
+        return z;
+    }
+
 }
+
+
