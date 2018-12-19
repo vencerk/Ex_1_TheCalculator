@@ -20,14 +20,6 @@
                 <category android:name="android.intent.category.DEFAULT"></category>
             </intent-filter>
         </activity>
-        <activity android:name=".Main2Activity">
-            <intent-filter>
-                <action android:name="com.ex.act.actS"/>
-                <category android:name="android.intent.category.DEFAULT"></category>
-            </intent-filter>
-
-
-        </activity>
 
     </application>
 
